@@ -39,3 +39,31 @@ require(keccak256(abi.encodePacked(_name)) == keccak256(abi.encodePacked("Vitali
 
     return "Hi!";
 }
+
+## Inheritance
+
+Good to use to add some logic in our work. Such as **Cat** is an **Animal** for subclass
+
+contract Doge {
+  function catchphrase() public returns (string memory) {
+    return "So Wow CryptoDoge";
+  }
+}
+
+contract BabyDoge is Doge {
+  function anotherCatchphrase() public returns (string memory) {
+    return "Such Moon BabyDoge";
+  }
+}
+
+> Here BabyDioge inherits from Doge. That means if you compile and deploy BabyDoge, it will have access to both catchphrase() and anotherCatchphrase() (and any other public functions we may define on Doge).
+
+## Import
+
+Put in the same directory that all your other contract. 
+
+## Storage vs Memory (data location - (HDD vs RAM))
+
+- storage refers to variable that are permanently stored on the blockchain
+- memory  for temporary one and are erased between external function calls to your contract - when the function call ends
+  

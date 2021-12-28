@@ -34,8 +34,11 @@ contract ZombieFactory {
     }
 
     function createRandomZombie(string memory _name) public {
+        //the createRandomZombie function  only get executed one time per user, when they create their first zombie. The ownerZombieCount[msg.sender] is equal to 0 otherwise throw and error
+        require (ownerZombieCount[msg.sender] == 0;)
         uint randDna = _generateRandomDna(_name);
         _createZombie(_name, randDna);
     }
 
 }
+
