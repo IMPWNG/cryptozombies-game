@@ -25,3 +25,4 @@ contract ZombieFeeding is ZombieFactory {
         _createZombie("NoName", newDna);
     }
 }
+ 
