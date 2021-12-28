@@ -131,7 +131,8 @@ require(keccak256(abi.encodePacked(_name)) == keccak256(abi.encodePacked("Vitali
 
 >    // If it's true, proceed with the function:
 
-    return "Hi!";
+return "Hi!";
+
 }
 
 ## Inheritance
