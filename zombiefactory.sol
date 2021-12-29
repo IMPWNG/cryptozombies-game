@@ -26,8 +26,8 @@ contract ZombieFactory {
     // key is an address and value a uint for keeping track oh how many zombies an owner has
     mapping (address => uint) ownerZombieCount;
 
-    // private function named _createZombie with the first argument by value using memory
-    function _createZombie(string memory _name, uint _dna) private {
+    // interal (for inherite accessibility) function named _createZombie with the first argument by value using memory
+    function _createZombie(string memory _name, uint _dna) interal {
 
         // Here we need the zombie's id. array.push() return the new lenght of the arrayand since the first item in an array has index 0, array.push() - 1 will be the index of the zombie we just added. Store the result of zombies.push() - 1 in a uint called id, so you can use this in the NewZombie event in the next line.
         uint id = zombies.push(Zombie(_name, _dna)) - 1;

@@ -5,10 +5,12 @@ Following the CryptoZombies tutorial with all the comments
 
 - state variables are permantly sotred in contract storage, is like writting on a DB
 
+````
 contract Example {
 >  // Here, we created a uint called myUnsignedInteger and set it equal to 100
   uint myUnsignedInteger = 100;
 }
+````
 
 - The **uint** data type is an unsigned integer (value must be non negative)
 
@@ -95,7 +97,6 @@ function add(uint _x, uint _y) public returns (uint) {
   return result;
 }
 
-
 ## Mapping and address
 
 - mapping : storing organized data . Is a key-value store for storing and looking up data
@@ -162,3 +163,42 @@ Put in the same directory that all your other contract.
 - storage refers to variable that are permanently stored on the blockchain
 - memory  for temporary one and are erased between external function calls to your contract - when the function call ends
   
+## Function Visibility 
+
+In addition to *public* and *external* we also have *internal* and *external*
+
+- internal is the same as private but it's accessible to contracts that inherit form this contract 
+
+- exertnal is the same as public but theses functions can only be called outside the contract
+
+contract Sandwich {
+  uint private sandwichesEaten = 0;
+
+  function eat() internal {
+    sandwichesEaten++;
+  }
+}
+
+contract BLT is Sandwich {
+  uint private baconSandwichesEaten = 0;
+
+  function eatWithBacon() public returns (string memory) {
+    baconSandwichesEaten++;
+>   // We can call this here because it's internal
+    eat();
+  }
+}
+
+## Interface
+
+contract LuckyNumber {
+  mapping(address => uint) numbers;
+
+  function setNum(uint _num) public {
+    numbers[msg.sender] = _num;
+  }
+
+  function getNum(address _myAddress) public view returns (uint) {
+    return numbers[_myAddress];
+  }
+}
