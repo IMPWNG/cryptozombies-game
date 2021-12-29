@@ -3,11 +3,34 @@ pragma solidity >=0.5.0 <0.6.0;
 //import 
 import "./zombiefactory.sol";
 
+    // contract interface with cryptokitty getKitty functions. Here we catch the data of this function in our contract
+    contract KittyInterface     {
+        function getKitty(uint256 _id) external view returns (
+            bool isGestating,
+            bool isReady,
+            uint256 cooldownIndex,
+            uint256 nextActionAt,
+            uint256 siringWithId,
+            uint256 birthTime,
+            uint256 matronId,
+            uint256 sireId,
+            uint256 generation,
+            uint256 genes
+        );
+    }
+
 // Inheritance
 contract ZombieFeeding is ZombieFactory {
     
-    //feedAndMultiply function with 2 parameters
-    function feedAndMultiply(uint _zombieId, uint _targetDna) public {
+    // CryptoKitties contract address under a variable named ckAdress
+    address ckAddress = 0x06012c8cf97BEaD5deAe237070F9587f8E7A266d;
+  
+    // We create a KittyInterface named kittyContract ad we initialize it with ckAddress
+    KittyInterface kittyContract = KittyInterface(ckAddress);
+
+
+    //feedAndMultiply function with 3 parameters
+    function feedAndMultiply(uint _zombieId, uint _targetDna, string memory _species) public {
 
         //Make sure we own the zombie by verifie that msg.sender is equal to this zombie's owner and only us can feed him
         require (msg.sender == zombieToOwner[_zombieId]);
@@ -21,8 +44,28 @@ contract ZombieFeeding is ZombieFactory {
         //Declare a uint named newDna and we set it equal to the average of myZombie DNA and _targetDna
         uint newDna = (myZombie.dna + _targetDna) / 2;
 
+        // after we calculate the new zombie DNA above we compare the keccak256 of _species and the string kitty
+        if (keccak256(abi.encodePacked(_species)) == keccak256(abi.encodePacked("kitty"))) {
+
+            //now we replace the last 2 digits of DNA with 99. "Assume newDna is 334455. Then newDna % 100 is 55, so newDna - newDna % 100 is 334400. Finally add 99 to get 334499."
+            newDna = newDna - newDna % 100 + 99;
+        }
+
         //When we have the new DNA, we call _createZombie. It require a Name but we set it first to NoName, we will create a function to change the zombie's name after
         _createZombie("NoName", newDna);
+    }
+
+    // The function feedOnKitty has _zombieId and _kittyId as parameters
+    function feedOnKitty(uint _zombiId, uint _kittyId) public {
+
+        // we first declare a uint named KittyDna (genes from the function getKitty above)
+        uint kittyDna;
+
+        // then, we call the kittyContract.getKitty function with _kittyId and we store genes in KittyDna. getKitty return a bunch of variables but we only care about the 10 ones, genes
+        (,,,,,,,,,kittyDna) = kittyContract.getKitty(_kittyId);
+
+        // then we call the function feedAndMultiply and we pass it _zombieId, kittyDna and kitty.
+        feedAndMultiply(_zombieId, kittyDna, "kitty");
     }
 }
  

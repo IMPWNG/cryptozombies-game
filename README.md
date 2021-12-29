@@ -219,6 +219,8 @@ contract BLT is Sandwich {
 
 ## Interface
 
+Here, anyone could store their lucky number and it would be associated with their Eth address. Anyone could aslo look up that person's lucky number using their address.
+
 ````
 contract LuckyNumber {
   mapping(address => uint) numbers;
@@ -231,4 +233,72 @@ contract LuckyNumber {
     return numbers[_myAddress];
   }
 }
+````
+
+External contract that wanted to read the data using the *getNum* function.
+
+For that, we have to to define an *interafce* of the LuckyNumber contract.
+
+````
+contract NumberInterface {
+  function getNum(address _myAddress) public view returns (uint);
+}
+
+````
+
+Now, we can use it in a contract such as : 
+
+````
+contract MyContract {
+  address NumberInterfaceAddress = 0xab38... 
+  // ^ The address of the FavoriteNumber contract on Ethereum
+  NumberInterface numberContract = NumberInterface(NumberInterfaceAddress);
+  // Now `numberContract` is pointing to the other contract
+
+  function someFunction() public {
+    // Now we can call `getNum` from that contract:
+    uint num = numberContract.getNum(msg.sender);
+    // ...and do something with `num` here
+  }
+}
+
+````
+Our contract can interact with any other contract as long they expose those function as *public* or 
+*external*
+
+## Hnading Mutliple Return Values
+
+````
+
+function multipleReturns() internal returns(uint a, uint b, uint c) {
+  return (1, 2, 3);
+}
+
+function processMultipleReturns() external {
+  uint a;
+  uint b;
+  uint c;
+  // This is how you do multiple assignment:
+  (a, b, c) = multipleReturns();
+}
+
+// Or if we only cared about one of the values:
+function getLastReturnValue() external {
+  uint c;
+  // We can just leave the other fields blank:
+  (,,c) = multipleReturns();
+}
+
+````
+## IF statements 
+
+````
+function eatBLT(string memory sandwich) public {
+  // Remember with strings, we have to compare their keccak256 hashes
+  // to check equality
+  if (keccak256(abi.encodePacked(sandwich)) == keccak256(abi.encodePacked("BLT"))) {
+    eat();
+  }
+}
+
 ````
