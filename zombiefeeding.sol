@@ -23,10 +23,20 @@ import "./zombiefactory.sol";
 contract ZombieFeeding is ZombieFactory {
     
     // CryptoKitties contract address under a variable named ckAdress
-    address ckAddress = 0x06012c8cf97BEaD5deAe237070F9587f8E7A266d;
+        // We remove this one
+    // address ckAddress = 0x06012c8cf97BEaD5deAe237070F9587f8E7A266d;
   
     // We create a KittyInterface named kittyContract ad we initialize it with ckAddress
-    KittyInterface kittyContract = KittyInterface(ckAddress);
+        // As we removed the variable bellow we have to modifie this one to
+    //KittyInterface kittyContract = KittyInterface(ckAddress);
+
+    // We just declare the variable kittyContract with KittyInterface
+    KittyInterface kittyContract;
+
+    // We create the setKittyContractAddress function with the param address with kittyContract = to kittyInterface with the address arg
+    function setKittyContractAddress(address _address) external {
+        kittyContract = KittyInterface(_address);
+    }
 
 
     //feedAndMultiply function with 3 parameters
