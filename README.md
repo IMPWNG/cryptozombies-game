@@ -7,7 +7,7 @@ Following the CryptoZombies tutorial with all the comments
 
 ````
 contract Example {
->  // Here, we created a uint called myUnsignedInteger and set it equal to 100
+// Here, we created a uint called myUnsignedInteger and set it equal to 100
   uint myUnsignedInteger = 100;
 }
 ````
@@ -30,12 +30,17 @@ uint[] dynamicArray;
 
 ## Function Declarations
 
->   function eatHamburgers(string memory _name, uint _amount) public {}
+````
+function eatHamburgers(string memory _name, uint _amount) public {
+
+}
+````
 
 This is a function named *eatHamburgers* that take 2 parameters : a String and a Uint and also set as Public and _name variable store on memory
 
 ## Work with Structs and Arrays
 
+````
 struct Person {
   uint age;
   string name;
@@ -43,14 +48,16 @@ struct Person {
 
 Person[] public people;
 
->   // create a New Person:
+// create a New Person:
 Person satoshi = Person(172, "Satoshi");
 
->   // Add that person to the Array:
+// Add that person to the Array:
 people.push(satoshi);
 
-> // Combine to keep code clean
+// Combine to keep code clean
 people.push(Person(16, "Vitalik"));
+
+````
 
 *array.push()*  adds something to the end of the array in the order we added them
 
@@ -58,11 +65,14 @@ people.push(Person(16, "Vitalik"));
 
 In solidity functions are public by default, anyone can call the contract function and execute the code
 
+````
 uint[] numbers;
 
 function _addToArray(uint _number) private {
   numbers.push(_number);
 }
+
+````
 
 Here, only other functions within our contract will be able to call this function and add the the *numbers* array
 
@@ -70,16 +80,20 @@ Here, only other functions within our contract will be able to call this functio
 
 Return values and function modifiers 
 
+````
 string greeting = "What's up dog";
 
 function sayHello() public returns (string memory) {
->   //Return a string
+//Return a string
   return greeting;
 }
+````
 
 Here, their is no state's change in Solidity so we can use the *view* function for only viewing the data
 
+````
 function sayHello() public view returns (string memory) 
+````
 
 ## Keccak256 and Typecasting
 
@@ -90,12 +104,14 @@ Events are a way for your contract to communicate that something happened on the
 >   // declare the event
 event IntegersAdded(uint x, uint y, uint result);
 
+````
 function add(uint _x, uint _y) public returns (uint) {
   uint result = _x + _y;
->   // fire an event to let the app know the function was called:
+// fire an event to let the app know the function was called:
   emit IntegersAdded(_x, _y, result);
   return result;
 }
+````
 
 ## Mapping and address
 
@@ -110,11 +126,14 @@ function add(uint _x, uint _y) public returns (uint) {
 
 Global variable that is available to all functions. It refers to the address of the person or smartcontract who called the current function.
 
+````
 mapping (address => uint) favoriteNumber;
 
 function setMyNumber(uint _myNumber) public { 
     favoriteNumbe[msg.sender] = _myNumber; 
 }
+
+````
 
 > Update favoriteNumber mapping to store _myNumber under msg.sender
 
@@ -122,24 +141,28 @@ function setMyNumber(uint _myNumber) public {
 
 Stop executing a function if some condittions are not true : 
 
+````
 function sayHiToVitalik(string memory _name) public returns (string memory) {
 
->    // Compares if _name equals "Vitalik". Throws an error and exits if not true.
+// Compares if _name equals "Vitalik". Throws an error and exits if not true.
 
->   // (Side note: Solidity doesn't have native string comparison, so we compare their keccak256 hashes to see if the strings are equal)
+// (Side note: Solidity doesn't have native string comparison, so we compare their keccak256 hashes to see if the strings are equal)
 
 require(keccak256(abi.encodePacked(_name)) == keccak256(abi.encodePacked("Vitalik")));
 
->    // If it's true, proceed with the function:
+// If it's true, proceed with the function:
 
 return "Hi!";
 
 }
 
+````
+
 ## Inheritance
 
 Good to use to add some logic in our work. Such as **Cat** is an **Animal** for subclass
 
+````
 contract Doge {
   function catchphrase() public returns (string memory) {
     return "So Wow CryptoDoge";
@@ -151,6 +174,8 @@ contract BabyDoge is Doge {
     return "Such Moon BabyDoge";
   }
 }
+
+````
 
 > Here BabyDioge inherits from Doge. That means if you compile and deploy BabyDoge, it will have access to both catchphrase() and anotherCatchphrase() (and any other public functions we may define on Doge).
 
@@ -171,6 +196,7 @@ In addition to *public* and *external* we also have *internal* and *external*
 
 - exertnal is the same as public but theses functions can only be called outside the contract
 
+````
 contract Sandwich {
   uint private sandwichesEaten = 0;
 
@@ -184,13 +210,16 @@ contract BLT is Sandwich {
 
   function eatWithBacon() public returns (string memory) {
     baconSandwichesEaten++;
->   // We can call this here because it's internal
+// We can call this here because it's internal
     eat();
   }
 }
 
+````
+
 ## Interface
 
+````
 contract LuckyNumber {
   mapping(address => uint) numbers;
 
@@ -202,3 +231,4 @@ contract LuckyNumber {
     return numbers[_myAddress];
   }
 }
+````
