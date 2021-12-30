@@ -402,3 +402,5 @@ onlyOwner is such a common requirement for contracts that most Solidity DApps st
 ## Function modifiers
 
 Just like a function but uses the keyword modifier instead
+
+## Gas

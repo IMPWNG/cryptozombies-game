@@ -3,41 +3,32 @@ pragma solidity >=0.5.0 <0.6.0;
 //import 
 import "./zombiefactory.sol";
 
-    // contract interface with cryptokitty getKitty functions. Here we catch the data of this function in our contract
-    contract KittyInterface     {
-        function getKitty(uint256 _id) external view returns (
-            bool isGestating,
-            bool isReady,
-            uint256 cooldownIndex,
-            uint256 nextActionAt,
-            uint256 siringWithId,
-            uint256 birthTime,
-            uint256 matronId,
-            uint256 sireId,
-            uint256 generation,
-            uint256 genes
-        );
-    }
+// Here we capture the data
+contract KittyInterface     {
+    function getKitty(uint256 _id) external view returns (
+        bool isGestating,
+        bool isReady,
+        uint256 cooldownIndex,
+        uint256 nextActionAt,
+        uint256 siringWithId,
+        uint256 birthTime,
+        uint256 matronId,
+        uint256 sireId,
+        uint256 generation,
+        uint256 genes
+    );
+}
 
-// Inheritance
+// Here we have access to the zombieFactory function set as public
 contract ZombieFeeding is ZombieFactory {
-    
-    // CryptoKitties contract address under a variable named ckAdress
-        // We remove this one
-    // address ckAddress = 0x06012c8cf97BEaD5deAe237070F9587f8E7A266d;
-  
-    // We create a KittyInterface named kittyContract ad we initialize it with ckAddress
-        // As we removed the variable bellow we have to modifie this one to
-    //KittyInterface kittyContract = KittyInterface(ckAddress);
 
-    // We just declare the variable kittyContract with KittyInterface
+    // We declare the variable *kittyContract* with *KittyInterface*
     KittyInterface kittyContract;
 
-    // We create the setKittyContractAddress function with the param address with kittyContract = to kittyInterface with the address arg - Only us can modifify it since it onlyOwner
+    // This function 
     function setKittyContractAddress(address _address) external onlyOwner {
         kittyContract = KittyInterface(_address);
     }
-
 
     //feedAndMultiply function with 3 parameters
     function feedAndMultiply(uint _zombieId, uint _targetDna, string memory _species) public {
