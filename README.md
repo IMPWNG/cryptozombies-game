@@ -386,3 +386,19 @@ contract Ownable {
 }
 
 ````
+Here, *constructor()* is an optional special function wich as the same name as the contract, executed one time when the contract is created.
+
+*modifier onlyOwner()* is like an half-function used to modify other functions to check some requirements prior to execution . In the example above *onlyOwner* can be used to limit acces so only the OWNER of the contract can run this function.
+
+So *OWNABLE* contact does the following : 
+
+- When the contract is created, its constructor set owner to msg.sender (the person who deployed it)
+- Adds *onlyOwner* modifier for restrict access to certain function to only the owner
+- IT allos to transfer the contract to a new owner
+
+onlyOwner is such a common requirement for contracts that most Solidity DApps start with a copy/paste of this Ownable contract, and then their first contract inherits from it.
+
+
+## Function modifiers
+
+Just like a function but uses the keyword modifier instead
