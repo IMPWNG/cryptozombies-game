@@ -484,3 +484,127 @@ function driveCar(uint _userId) public olderThan(16, _userId) {
 You can see here that the olderThan modifier takes arguments just like a function does. And that the driveCar function passes its arguments to the modifier.
 
 Let's try making our own modifier that uses the zombie level property to restrict access to special abilities.
+
+## Saving Gas with View Functions 
+
+View functions don't cost any gas when they're called externally by a user. This is because view functions don't actually change anything on the blockchain. they only read the data. So marking a function with view tells web3.js that it only needs to query your local Ethereum node to run the function, and it doesn't actually have to create a transaction on the blockchain (which would need to be run on every single node, and cost gas).
+
+If a view function is called internally from another function in the same contract that is not a view function, it will still cost gas. This is because the other function creates a transaction on Ethereum, and will still need to be verified from every node. So view functions are only free when they're called externally.
+
+## Storage costs
+
+Every time you write or change a piece of data, it’s written permanently to the blockchain.
+In order to keep costs down, you want to avoid writing data to storage except when absolutely necessary. Sometimes this involves seemingly inefficient programming logic — like rebuilding an array in memory every time a function is called instead of simply saving that array in a variable for quick lookups.
+
+In most programming languages, looping over large data sets is expensive. But in Solidity, this is way cheaper than using storage if it's in an external view function, since view functions don't cost your users any gas. (And gas costs your users real money!).
+
+We'll go over for loops in the next chapter, but first, let's go over how to declare arrays in memory.
+
+## Declaring arrays in memory
+
+We can use *memory* with arrays to create a new array inside a function without needing to write anything to storage. It will only exist until the end of the function call and its lot cheaper gas-wise than updating an array in storage its free if it's a view function called externally.
+
+````
+function getArray() external pure returns(uint[] memory) {
+  // Instantiate a new array in memory with a length of 3
+  uint[] memory values = new uint[](3);
+
+  // Put some values to it
+  values[0] = 1;
+  values[1] = 2;
+  values[2] = 3;
+
+  return values;
+} 
+
+````
+
+## For Loops
+
+Sometimes we can use a *for* loop to build the contents of an array in a function rather than simply saving that array to storage
+
+````
+
+function getEvens() pure external returns(uint[] memory) {
+  uint[] memory evens = new uint[](5);
+  // Keep track of the index in the new array:
+  uint counter = 0;
+  // Iterate 1 through 10 with a for loop:
+  for (uint i = 1; i <= 10; i++) {
+    // If `i` is even...
+    if (i % 2 == 0) {
+      // Add it to our array
+      evens[counter] = i;
+      // Increment counter to the next empty index in `evens`:
+      counter++;
+    }
+  }
+  return evens;
+}
+
+````
+This function will return an array with the contents [2, 4, 6, 8, 10].
+
+## Payable
+
+Special type of function that can receive Ether.
+
+````
+
+contract OnlineStore {
+  function buySomething() external payable {
+    // Check to make sure 0.001 ether was sent to the function call:
+    require(msg.value == 0.001 ether);
+    // If so, some logic to transfer the digital item to the caller of the function:
+    transferThing(msg.sender);
+  }
+}
+
+````
+````
+OnlineStore.buySomething({from: web3.eth.defaultAccount, value: web3.utils.toWei(0.001)})
+````
+Notice the value field, where the javascript function call specifies how much ether to send (0.001). If you think of the transaction like an envelope, and the parameters you send to the function call are the contents of the letter you put inside, then adding a value is like putting cash inside the envelope — the letter and the money get delivered together to the recipient.
+
+## withdraw
+
+````
+
+contract GetPaid is Ownable {
+  function withdraw() external onlyOwner {
+    address payable _owner = address(uint160(owner()));
+    _owner.transfer(address(this).balance);
+  }
+}
+
+````
+
+It is important to note that you cannot transfer Ether to an address unless that address is of type address payable. But the _owner variable is of type uint160, meaning that we must explicitly cast it to address payable.
+
+
+
+````
+
+uint itemFee = 0.001 ether;
+msg.sender.transfer(msg.value - itemFee);
+
+````
+You can use transfer to send funds to any Ethereum address. For example, you could have a function that transfers Ether back to the msg.sender if they overpaid for an item:
+
+Or in a contract with a buyer and a seller, you could save the seller's address in storage, then when someone purchases his item, transfer him the fee paid by the buyer: seller.transfer(msg.value).
+
+## Random number generation via keccak256
+
+check how to generate random number on solidity doc 
+
+## Else statement
+
+````
+
+if (zombieCoins[msg.sender] > 100000000) {
+  // You rich!!!
+} else {
+  // We require more ZombieCoins...
+}
+
+````
