@@ -404,3 +404,83 @@ onlyOwner is such a common requirement for contracts that most Solidity DApps st
 Just like a function but uses the keyword modifier instead
 
 ## Gas
+
+Gas otpimization for function execution 
+
+Inside structs : 
+
+If you have multiple uints inside a struct, using a smaller-sized uint when possible will allow Solidity to pack these variables together to take up less storage. For example:
+
+````
+struct NormalStruct {
+  uint a;
+  uint b;
+  uint c;
+}
+
+struct MiniMe {
+  uint32 a;
+  uint32 b;
+  uint c;
+}
+
+// `mini` will cost less gas than `normal` because of struct packing
+NormalStruct normal = NormalStruct(10, 20, 30);
+MiniMe mini = MiniMe(10, 20, 30); 
+
+````
+
+For example, a struct with fields uint c; uint32 a; uint32 b; will cost less gas than a struct with fields uint32 a; uint c; uint32 b; because the uint32 fields are clustered together.
+
+## time units
+
+Solidity provides some native units for dealing with time.
+
+The variable now will return the current unix timestamp of the latest block (the number of seconds that have passed since January 1st 1970). The unix time as I write this is 1515527488.
+
+Solidity also contains the time units seconds, minutes, hours, days, weeks and years. These will convert to a uint of the number of seconds in that length of time. So 1 minutes is 60, 1 hours is 3600 (60 seconds x 60 minutes), 1 days is 86400 (24 hours x 60 minutes x 60 seconds), etc.
+
+````
+
+uint lastUpdated;
+
+// Set `lastUpdated` to `now`
+function updateTimestamp() public {
+  lastUpdated = now;
+}
+
+// Will return `true` if 5 minutes have passed since `updateTimestamp` was 
+// called, `false` if 5 minutes have not passed
+function fiveMinutesHavePassed() public view returns (bool) {
+  return (now >= (lastUpdated + 5 minutes));
+}
+
+````
+
+## Public Functions & Security
+
+An important security practice is to examine all your public and external functions, and try to think of ways users might abuse them. Remember — unless these functions have a modifier like onlyOwner, any user can call them and pass them any data they want to.
+
+## Function modifiers with arguments
+
+````
+
+// A mapping to store a user's age:
+mapping (uint => uint) public age;
+
+// Modifier that requires this user to be older than a certain age:
+modifier olderThan(uint _age, uint _userId) {
+  require(age[_userId] >= _age);
+  _;
+}
+
+// Must be older than 16 to drive a car (in the US, at least).
+// We can call the `olderThan` modifier with arguments like so:
+function driveCar(uint _userId) public olderThan(16, _userId) {
+  // Some function logic
+}
+
+````
+You can see here that the olderThan modifier takes arguments just like a function does. And that the driveCar function passes its arguments to the modifier.
+
+Let's try making our own modifier that uses the zombie level property to restrict access to special abilities.
