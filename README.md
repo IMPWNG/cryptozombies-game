@@ -608,3 +608,9 @@ if (zombieCoins[msg.sender] > 100000000) {
 }
 
 ````
+
+## ERC721
+
+- Transfer
+- BalanceOf & ownerOf
+- Approve
